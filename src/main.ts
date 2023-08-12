@@ -11,8 +11,7 @@ async function bootstrap() {
     .setTitle('Estoque API')
     .setDescription('Endpoints para API de estoque')
     .setVersion('1.0')
-    .addTag('Auth')
-    .addTag('Users')
+    .addBearerAuth()
     .addSecurityRequirements('Session', ['Bearer'])
     .build();
 
