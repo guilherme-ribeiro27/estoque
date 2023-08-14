@@ -17,8 +17,12 @@ describe('AppController (e2e)', () => {
 
   it('/ (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/auth/login')
       .expect(200)
-      .expect('Hello World!');
+      .expect({
+        id: 1,
+        username: 'john',
+        password: 'changeme',
+      });
   });
 });

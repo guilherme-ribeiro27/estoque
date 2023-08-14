@@ -20,6 +20,7 @@ export class AuthService {
             email: user.email,
             access_token: this.jwtService.sign({
                 id: user.id,
+                userType: user.type
             }),
             user_type: user.type
         }
