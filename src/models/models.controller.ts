@@ -1,5 +1,5 @@
 import { ModelsService } from './models.service';
-import {Get, Post, Put, Delete, Body, BadRequestException,Controller, Req } from  '@nestjs/common';
+import {Get, Post, Put, Delete, Body, BadRequestException,Controller, Req,Query } from  '@nestjs/common';
 import { ApiOperation, ApiTags,ApiOkResponse,ApiBearerAuth,ApiParam } from '@nestjs/swagger';
 import { CreateModelDto } from './dto/create-model.dto';
 import { UsersService } from 'src/users/users.service';
@@ -92,4 +92,5 @@ export class ModelsController {
   async findById(@Req() req):Promise<ProductModels> {
     return await this.modelsService.getModelById(Number(req.params.id));
   }
+
 }

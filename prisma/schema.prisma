@@ -37,4 +37,15 @@ model ProductModels{
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
   Users Users? @relation(fields: [usersId], references: [id])
+  Stock Stock[]
+}
+
+model Stock{
+  id Int @id @default(autoincrement())
+  productModelsId Int @unique
+  size Int
+  quantity Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+  ProductModels ProductModels @relation(fields: [productModelsId], references: [id])
 }

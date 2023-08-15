@@ -9,6 +9,7 @@ import { AuthMiddleware } from './common/middlewares/auth-middleware';
 import { ModelsController } from './models/models.controller';
 import { JwtService } from '@nestjs/jwt';
 import { StockModule } from './stock/stock.module';
+import { StockController } from './stock/stock.controller';
 @Module({
   imports: [UsersModule, AuthModule, ConfigModule.forRoot({isGlobal:true}), ModelsModule, StockModule],
   controllers: [AppController],
@@ -20,8 +21,9 @@ export class AppModule implements NestModule{
       .apply(AuthMiddleware)
       .exclude(
         { "path" : "models", "method": RequestMethod.GET},
-        { "path" : "models/ean/:ean", "method": RequestMethod.GET}
+        { "path" : "models/ean/:ean", "method": RequestMethod.GET},
+        { "path" : "models/ean/:ean", "method": RequestMethod.GET},
       )
-      .forRoutes(ModelsController)
+      .forRoutes(ModelsController,StockController)
   }
 }
