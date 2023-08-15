@@ -10,8 +10,9 @@ import { ModelsController } from './models/models.controller';
 import { JwtService } from '@nestjs/jwt';
 import { StockModule } from './stock/stock.module';
 import { StockController } from './stock/stock.controller';
+import { UsersTypeModule } from './users-type/users-type.module';
 @Module({
-  imports: [UsersModule, AuthModule, ConfigModule.forRoot({isGlobal:true}), ModelsModule, StockModule],
+  imports: [UsersModule, AuthModule, ConfigModule.forRoot({isGlobal:true}), ModelsModule, StockModule, UsersTypeModule],
   controllers: [AppController],
   providers: [AppService,JwtService],
 })

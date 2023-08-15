@@ -1,6 +1,6 @@
-import { Controller ,Post,Body} from '@nestjs/common';
+import { Controller ,Post,Body, Req} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiOperation, ApiTags,ApiCreatedResponse,ApiOkResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags,ApiOkResponse } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Users, Prisma} from '@prisma/client';
 @ApiTags('Users')
@@ -16,7 +16,8 @@ export class UsersController {
     status:200,
   })
   @Post('registro')
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Req() req,@Body() createUserDto: CreateUserDto) {
+
     return await this.usersService.createUser(createUserDto);
   }
 }

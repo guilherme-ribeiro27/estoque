@@ -5,7 +5,7 @@ import { AuthUserDto } from './dto/auth-user.dto';
 import { UsersService } from '../users/users.service';
 import { AuthUserResponseDto } from './dto/auth-user-response.dto';
 import { JwtService } from '@nestjs/jwt';
-
+import { UserTypes } from '../users-type/enums/user-types.enum';
 @Injectable()
 export class AuthService {
     constructor(private usersService: UsersService, private readonly jwtService: JwtService,) { }
@@ -13,14 +13,15 @@ export class AuthService {
     async login(@Body() authUserDto: AuthUserDto):Promise<AuthUserResponseDto>{
         const user = await this.validateUser(authUserDto);
         if(!user) throw new BadRequestException('E-mail ou senha estão incorretos');
-
+        let userType;
+        
         const payload: AuthUserResponseDto = {
             id: user.id,
             name: user.name,
             email: user.email,
             access_token: this.jwtService.sign({
                 id: user.id,
-                userType: user.type
+                userType: 
             }),
             user_type: user.type
         }

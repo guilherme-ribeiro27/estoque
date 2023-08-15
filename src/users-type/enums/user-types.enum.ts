@@ -1,0 +1,6 @@
+export enum UserTypes{
+    ADMIN = 'ADMIN',
+    ESTOQUISTA = 'ESTOQUISTA',
+    VENDEDOR = 'VENDEDOR',
+    GERENTE_DE_VENDA = 'GERENTE_DE_VENDA'
+}
