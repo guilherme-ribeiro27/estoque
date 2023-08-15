@@ -8,8 +8,9 @@ import { ModelsModule } from './models/models.module';
 import { AuthMiddleware } from './common/middlewares/auth-middleware';
 import { ModelsController } from './models/models.controller';
 import { JwtService } from '@nestjs/jwt';
+import { StockModule } from './stock/stock.module';
 @Module({
-  imports: [UsersModule, AuthModule, ConfigModule.forRoot({isGlobal:true}), ModelsModule],
+  imports: [UsersModule, AuthModule, ConfigModule.forRoot({isGlobal:true}), ModelsModule, StockModule],
   controllers: [AppController],
   providers: [AppService,JwtService],
 })
