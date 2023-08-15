@@ -11,8 +11,10 @@ async function bootstrap() {
     .setTitle('Estoque API')
     .setDescription('Endpoints para API de estoque')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+    'JWT',)
     .addSecurityRequirements('Session', ['Bearer'])
+    
     .build();
 
   const options: SwaggerDocumentOptions = {
@@ -20,6 +22,7 @@ async function bootstrap() {
       controllerKey: string,
       methodKey: string
     ) => methodKey
+    
   };
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('api', app, document);

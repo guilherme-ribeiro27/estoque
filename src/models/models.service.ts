@@ -7,13 +7,13 @@ import { UpdateModelDto } from './dto/update-model.dto';
 export class ModelsService {
     constructor(private prisma: PrismaService) { }
 
-    async createModel(createModelDto : CreateModelDto){
+    async createModel(createModelDto : CreateModelDto, userId:number){
         return await this.prisma.productModels.create({
             data: {
                 ean: createModelDto.ean,
                 price: createModelDto.price,
                 description: createModelDto.description,
-                usersId  : createModelDto.Users,
+                usersId  : userId,
             }
         })
     }
@@ -38,7 +38,10 @@ export class ModelsService {
         })
     }
 
-    async updateModel(updateModelDto: UpdateModelDto){
+    async updateModel(updateModelDto: UpdateModelDto, userId:number){
+        const dataAtualizacao = new Date();
+        dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
+        dataAtualizacao.getUTCDate()
         return await this.prisma.productModels.update({
             where: {
                 id: updateModelDto.id
@@ -47,7 +50,8 @@ export class ModelsService {
                 ean: updateModelDto.ean,
                 price: updateModelDto.price,
                 description: updateModelDto.description,
-                usersId  : updateModelDto.Users,
+                usersId  : userId,
+                updatedAt: dataAtualizacao
             }
         })
     }

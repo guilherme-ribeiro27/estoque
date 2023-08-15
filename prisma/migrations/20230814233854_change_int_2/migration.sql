@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ProductModels" ALTER COLUMN "ean" SET DATA TYPE DOUBLE PRECISION;

@@ -30,7 +30,7 @@ model Users {
 
 model ProductModels{
   id Int @id @default(autoincrement())
-  ean Int @unique
+  ean Float @unique
   price Float
   description String
   usersId Int

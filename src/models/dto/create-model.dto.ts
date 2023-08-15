@@ -14,8 +14,4 @@ export class CreateModelDto {
     @ApiProperty()
     @IsNotEmpty({ message: 'É necessário informar a descrição.' })
     description: string;
-    
-    @ApiProperty()
-    @IsNotEmpty({ message: 'É necessário informar o id do usuário.' })
-    Users: number;
 }
