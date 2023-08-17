@@ -1,18 +1,26 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
+import { PrismaService } from '../prisma.service';
 
 describe('UsersService', () => {
-  let service: UsersService;
+    let prismaService:PrismaService;
+    let usersService:UsersService;
+    
+    beforeEach(()=>{
+        prismaService = new PrismaService();
+        usersService = new UsersService(prismaService);
+    })
+    
+    it('should create a user successfully',async ()=>{
+        const user = {
+            name: 'Teste',
+            email: 'teste@estoque.com',
+            password: '123456', //vai ser criptografada na execução do método
+            type: 3,
+        }
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
-    }).compile();
+        const createdUser = await usersService.createUser(user);
 
-    service = module.get<UsersService>(UsersService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+        expect(createdUser).toHaveProperty('id');
+    })
 });

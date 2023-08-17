@@ -34,6 +34,9 @@ export class UsersService{
         return await bcrypt.compare(loginPassword,userPassword)
     }
     async createUser(createUserDto: CreateUserDto): Promise<Users> {
+        const dataInsercao = new Date();
+        dataInsercao.setHours(dataInsercao.getHours() - 3);
+
         const registred = await this.findByEmail({email: createUserDto.email})
 
         if(registred) throw new BadRequestException('O usuário já está registrado na base de dados.',);
@@ -42,7 +45,9 @@ export class UsersService{
           data:{
             ...createUserDto,
             email: createUserDto.email.toLowerCase(),
-            password: await bcrypt.hash(createUserDto.password,10)
+            password: await bcrypt.hash(createUserDto.password,10),
+            createdAt: dataInsercao,
+            updatedAt: null,
           }
         });
     }

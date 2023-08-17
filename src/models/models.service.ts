@@ -2,13 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateModelDto } from './dto/create-model.dto';
 import { UpdateModelDto } from './dto/update-model.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, ProductModels } from '@prisma/client';
 
 @Injectable()
 export class ModelsService {
     constructor(private prisma: PrismaService) { }
 
-    async createModel(createModelDto : CreateModelDto, userId:number){
+    async createModel(createModelDto : CreateModelDto, userId:number):Promise<ProductModels>{
         try {
             return await this.prisma.productModels.create({
                 data: {
