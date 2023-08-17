@@ -42,10 +42,12 @@ model ProductModels{
 
 model Stock{
   id Int @id @default(autoincrement())
-  productModelsId Int @unique
+  productModelsId Int 
   size Int
   quantity Int
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
   ProductModels ProductModels @relation(fields: [productModelsId], references: [id])
+
+  @@unique([productModelsId, size], name: "unique_stock")
 }

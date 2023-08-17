@@ -3,10 +3,18 @@ import { PrismaService } from '../prisma.service';
 import { Users, Prisma} from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UsersService{
     constructor(private prisma: PrismaService) { }
 
+    async findAll(): Promise<Users[]> {
+        return this.prisma.users.findMany({
+            include:{
+                UserTypes:true
+            },
+        });
+    }
     async findById(id: number): Promise<Users> {
         return await this.prisma.users.findUnique({
             where: {
@@ -16,30 +24,15 @@ export class UsersService{
     }
     async findByEmail(email : Prisma.UsersWhereUniqueInput) : Promise<any>{
         return await this.prisma.users.findUnique({
-            select:{
-                UserTypes:{
-                    select:{
-                        id: true,
-                        name:true
-                    }
-                }
+            include:{
+                UserTypes:true
             },
             where: email
         })
     }
-
     async comparePassword(loginPassword:string , userPassword:string){
         return await bcrypt.compare(loginPassword,userPassword)
     }
-
-    async user(
-        userWhereUniqueInput: Prisma.UsersWhereUniqueInput,
-    ): Promise<Users | null> {
-        return this.prisma.users.findUnique({
-            where: userWhereUniqueInput,
-        })
-    }
-
     async createUser(createUserDto: CreateUserDto): Promise<Users> {
         const registred = await this.findByEmail({email: createUserDto.email})
 
@@ -53,20 +46,47 @@ export class UsersService{
           }
         });
     }
-
-    async updateUser(params: {
-        where: Prisma.UsersWhereUniqueInput;
-        data: Prisma.UsersUpdateInput;
-        }): Promise<Users> {
-        const { where, data } = params;
+    async updateUserNotAdmin(updateUserDto:UpdateUserDto): Promise<Users> {
+        const dataAtualizacao = new Date();
+        dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
         return this.prisma.users.update({
-            data,
-            where,
+            data: {
+                email: updateUserDto.email.toLowerCase(),
+                name: updateUserDto.name,
+                updatedAt: dataAtualizacao
+            },
+            where:{
+                id: updateUserDto.id
+            },
         });
     }
-    async deleteUser(where: Prisma.UsersWhereUniqueInput): Promise<Users> {
-        return this.prisma.users.delete({
-          where,
+    async updateUserAdmin(updateUserDto:UpdateUserDto): Promise<Users>{
+        const dataAtualizacao = new Date();
+        dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
+        return this.prisma.users.update({
+            data: {
+                email: updateUserDto.email.toLowerCase(),
+                name: updateUserDto.name,
+                updatedAt: dataAtualizacao,
+                type: updateUserDto.type
+            },
+            where:{
+                id: updateUserDto.id
+            },
+        });
+    }
+    
+    async deleteUser(id:number): Promise<Users> {
+        const dataAtualizacao = new Date();
+        dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
+        return this.prisma.users.update({
+            data:{
+                deletedAt: dataAtualizacao,
+                updatedAt: dataAtualizacao
+            },
+            where:{
+                id: id
+            }
         });
     }
 }

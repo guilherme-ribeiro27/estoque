@@ -11,6 +11,8 @@ import { JwtService } from '@nestjs/jwt';
 import { StockModule } from './stock/stock.module';
 import { StockController } from './stock/stock.controller';
 import { UsersTypeModule } from './users-type/users-type.module';
+import { UsersTypeController } from './users-type/users-type.controller';
+import { UsersController } from './users/users.controller';
 @Module({
   imports: [UsersModule, AuthModule, ConfigModule.forRoot({isGlobal:true}), ModelsModule, StockModule, UsersTypeModule],
   controllers: [AppController],
@@ -23,8 +25,9 @@ export class AppModule implements NestModule{
       .exclude(
         { "path" : "models", "method": RequestMethod.GET},
         { "path" : "models/ean/:ean", "method": RequestMethod.GET},
-        { "path" : "models/ean/:ean", "method": RequestMethod.GET},
+        { "path" : "stock/ean/:ean", "method": RequestMethod.GET},
+        { "path" : "stock/all", "method": RequestMethod.GET},
       )
-      .forRoutes(ModelsController,StockController)
+      .forRoutes(ModelsController,StockController,UsersController,UsersTypeController)
   }
 }

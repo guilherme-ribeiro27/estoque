@@ -1,16 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { Stock } from '@prisma/client';
+import { Prisma, Stock } from '@prisma/client';
 import { UpdateStockDto } from './dto/update-stock.dto';
 @Injectable()
 export class StockService {
     constructor(private prisma: PrismaService) { }
 
     async getStockByEan(ean: number): Promise<Stock[]> {
-        return this.prisma.$queryRaw`
-        SELECT * FROM "Stock" WHERE 
-        productModelsId = (SELECT id FROM "ProductModels" WHERE ean = ${ean})
-        `
+        const model = await this.prisma.productModels.findUnique({
+            where: {
+                ean: Number(ean)
+            }
+        })
+        const stock = await this.prisma.stock.findMany({
+            include:{ProductModels:true},
+            where:{
+                productModelsId: model.id
+            }
+        })
+        return stock
     }
     
     async stock(updateStockDto:UpdateStockDto,): Promise<Stock>{
@@ -19,7 +27,6 @@ export class StockService {
                 productModelsId: updateStockDto.modelId,
                 size: updateStockDto.size,
                 quantity: 1
-
             },
             update:{
                 quantity: {
@@ -27,18 +34,32 @@ export class StockService {
                 }
             },
             where:{
-                productModelsId: updateStockDto.modelId,
-                size: updateStockDto.size
+                unique_stock:{
+                    productModelsId: updateStockDto.modelId,
+                    size: updateStockDto.size
+                }
             }
-        })
+        }) 
     }
     async removeStock(ean: number,size:number): Promise<Stock>{
-        return await this.prisma.$queryRaw
-        `
-            UPDATE "Stock" SET quantity = quantity - 1 WHERE 
-            productModelsId = (SELECT id FROM "ProductModels" WHERE ean = ${ean})
-            AND size = ${size}
-        `
+        const model = await this.prisma.productModels.findUnique({
+            where: {
+                ean: Number(ean)
+            }
+        })
+        return await this.prisma.stock.update({
+            where:{
+                unique_stock:{
+                    productModelsId: model.id,
+                    size: Number(size)
+                }
+            },
+            data:{
+                quantity:{
+                    decrement: 1
+                }
+            }
+        })
     }
     async getAllStock(): Promise<Stock[]> {
         return this.prisma.stock.findMany();

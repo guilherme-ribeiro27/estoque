@@ -1,21 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateModelDto } from './dto/create-model.dto';
 import { UpdateModelDto } from './dto/update-model.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ModelsService {
     constructor(private prisma: PrismaService) { }
 
     async createModel(createModelDto : CreateModelDto, userId:number){
-        return await this.prisma.productModels.create({
-            data: {
-                ean: createModelDto.ean,
-                price: createModelDto.price,
-                description: createModelDto.description,
-                usersId  : userId,
-            }
-        })
+        try {
+            return await this.prisma.productModels.create({
+                data: {
+                    ean: createModelDto.ean,
+                    price: createModelDto.price,
+                    description: createModelDto.description,
+                    usersId  : userId,
+                }
+            })
+        } catch (error) {
+        if( error instanceof Prisma.PrismaClientKnownRequestError){
+            if(error.code === 'P2002') throw new BadRequestException('Modelo já cadastrado')
+        }
+    }
     }
 
     async getAllModels(){
@@ -41,7 +48,6 @@ export class ModelsService {
     async updateModel(updateModelDto: UpdateModelDto, userId:number){
         const dataAtualizacao = new Date();
         dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
-        dataAtualizacao.getUTCDate()
         return await this.prisma.productModels.update({
             where: {
                 id: updateModelDto.id

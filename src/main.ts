@@ -11,10 +11,8 @@ async function bootstrap() {
     .setTitle('Estoque API')
     .setDescription('Endpoints para API de estoque')
     .setVersion('1.0')
-    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-    'JWT',)
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },'JWT',)
     .addSecurityRequirements('Session', ['Bearer'])
-    
     .build();
 
   const options: SwaggerDocumentOptions = {

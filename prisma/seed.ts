@@ -2,21 +2,42 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-    await prisma.userTypes.create({
-        data: {
-        name: 'Administrador'
-        },
-    })
-    await prisma.userTypes.create({
-        data: {
-          name: 'Estoquista'
-        },
-      })
-    await prisma.userTypes.create({
-        data: {
-            name: 'Vendedor'
-        },
-    })
+  await prisma.stock.create({
+    data:{
+      quantity: 1,
+      size:37,
+      productModelsId:1
+    }
+  })
+  await prisma.stock.create({
+    data:{
+      quantity: 1,
+      size:38,
+      productModelsId:1
+    }
+  })
+
+  await prisma.stock.create({
+    data:{
+      quantity: 1,
+      size:39,
+      productModelsId:3
+    }
+  })
+  await prisma.stock.create({
+    data:{
+      quantity: 1,
+      size:40,
+      productModelsId:3
+    }
+  })
+  await prisma.stock.create({
+    data:{
+      quantity: 1,
+      size:41,
+      productModelsId:3
+    }
+  })
   }
   main()
     .then(async () => {

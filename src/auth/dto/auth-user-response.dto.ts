@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-
+import { UserTypes } from '../../users-type/enums/user-types.enum';
 export class AuthUserResponseDto{
     @ApiProperty()
     id: number;
@@ -14,5 +14,5 @@ export class AuthUserResponseDto{
     access_token: string;
 
     @ApiProperty()
-    user_type: number;
+    user_type: UserTypes;
 }
