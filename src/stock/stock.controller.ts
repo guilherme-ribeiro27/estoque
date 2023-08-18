@@ -36,8 +36,8 @@ export class StockController {
     if(user.userType !== UserTypes.ADMIN && user.userType !== UserTypes.ESTOQUISTA) throw new NotFoundException('Usuário não autorizado');
     //validar se o modelo já existe
     const model = await this.modelsService.getModelByEan(createStockDto.ean);
-    if(!model) throw new NotFoundException('Modelo não encontrado');
     
+    if(!model) throw new NotFoundException('Modelo não encontrado');
     await this.stockService.stock({modelId:model.id, size:createStockDto.size});
     return 'Estoque cadastrado com sucesso'
   }

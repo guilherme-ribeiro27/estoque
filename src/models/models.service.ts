@@ -46,20 +46,26 @@ export class ModelsService {
     }
 
     async updateModel(updateModelDto: UpdateModelDto, userId:number){
-        const dataAtualizacao = new Date();
-        dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
-        return await this.prisma.productModels.update({
-            where: {
-                id: updateModelDto.id
-            },
-            data: {
-                ean: updateModelDto.ean,
-                price: updateModelDto.price,
-                description: updateModelDto.description,
-                usersId  : userId,
-                updatedAt: dataAtualizacao
+        try {
+            const dataAtualizacao = new Date();
+            dataAtualizacao.setHours(dataAtualizacao.getHours() - 3);
+            return await this.prisma.productModels.update({
+                where: {
+                    id: updateModelDto.id
+                },
+                data: {
+                    ean: updateModelDto.ean,
+                    price: updateModelDto.price,
+                    description: updateModelDto.description,
+                    usersId  : userId,
+                    updatedAt: dataAtualizacao
+                }
+            })
+        } catch (error) {
+            if( error instanceof Prisma.PrismaClientKnownRequestError){
+                if(error.code === 'P2002') throw new BadRequestException('Modelo já cadastrado')
             }
-        })
+        }
     }
 
     async deleteModel(id: number){

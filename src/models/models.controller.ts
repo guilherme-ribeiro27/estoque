@@ -4,7 +4,6 @@ import { ApiOperation, ApiTags,ApiOkResponse,ApiBearerAuth,ApiParam } from '@nes
 import { CreateModelDto } from './dto/create-model.dto';
 import { UsersService } from 'src/users/users.service';
 import { ProductModels } from '@prisma/client';
-import { Request } from 'express';
 import { UpdateModelDto } from './dto/update-model.dto';
 import { UserTypes } from 'src/users-type/enums/user-types.enum';
 
@@ -13,6 +12,14 @@ import { UserTypes } from 'src/users-type/enums/user-types.enum';
 export class ModelsController {
   constructor(private readonly modelsService: ModelsService, private usersService:UsersService) {}
 
+  @ApiOperation({summary: 'Busca um modelo pelo ID'})
+  @ApiOkResponse({description: 'Modelo encontrado com sucesso',status:200,})
+  @ApiParam({name: 'id', type: 'number'})
+  @ApiBearerAuth('JWT')
+  @Get('id/:id')
+  async findById(@Req() req):Promise<ProductModels> {
+    return await this.modelsService.getModelById(Number(req.params.id));
+  }
   
   @ApiOperation({summary: 'Busca todos os modelos'})
   @ApiOkResponse({description: 'Modelos encontrados com sucesso',status:200,})
@@ -45,12 +52,13 @@ export class ModelsController {
   @ApiOkResponse({description: 'Modelo atualizado com sucesso',status:200,})
   @ApiBearerAuth('JWT')
   @Put('atualizar')
-  async update(@Req() req,@Body() updateModelDto: UpdateModelDto,):Promise<ProductModels> {
+  async update(@Req() req,@Body() updateModelDto: UpdateModelDto,):Promise<string> {
     //validar se o usuário é do tipo 1 ou 2
     const user = req.user;
     if(user.userType !== UserTypes.ADMIN && user.userType !== UserTypes.ESTOQUISTA) 
       throw new BadRequestException('O usuário não tem permissão para atualizar um modelo.')
-    return await this.modelsService.updateModel(updateModelDto, user.id);
+    const model =  await this.modelsService.updateModel(updateModelDto, user.id);
+    return 'Modelo atualizado com sucesso'
   }
 
   @ApiOperation({summary: 'Deleta um modelo'})
@@ -73,13 +81,6 @@ export class ModelsController {
     }
   }
 
-  @ApiOperation({summary: 'Busca um modelo pelo ID'})
-  @ApiOkResponse({description: 'Modelo encontrado com sucesso',status:200,})
-  @ApiParam({name: 'id', type: 'number'})
-  @ApiBearerAuth('JWT')
-  @Get('id/:id')
-  async findById(@Req() req):Promise<ProductModels> {
-    return await this.modelsService.getModelById(Number(req.params.id));
-  }
+ 
 
 }

@@ -22,6 +22,14 @@ export class StockService {
     }
     
     async stock(updateStockDto:UpdateStockDto,): Promise<Stock>{
+        const stock = await this.prisma.stock.findUnique({
+            where:{
+                unique_stock:{
+                    productModelsId: updateStockDto.modelId,
+                    size: updateStockDto.size
+                }
+            }
+        })       
         return await this.prisma.stock.upsert({
             create:{
                 productModelsId: updateStockDto.modelId,

@@ -24,6 +24,7 @@ export class UsersController {
 
   @ApiOperation({summary: 'Cria um usuário'})
   @ApiOkResponse({description: 'Usuário cadastrado com sucesso',status:200,})
+  @ApiBearerAuth('JWT')
   @Post('registro')
   async create(@Req() req,@Body() createUserDto: CreateUserDto) {
     return await this.usersService.createUser(createUserDto);

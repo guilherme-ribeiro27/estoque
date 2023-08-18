@@ -46,7 +46,7 @@ export class AuthService {
     }
 
     async validateUser(login: AuthUserDto):Promise<Users>{
-        const user = await this.usersService.findByEmail({email: login.email});
+        const user = await this.usersService.findByEmail({email: login.email.toLowerCase()});
         if(!user) throw new NotFoundException('Usuário não encontrado');
 
         const matchPassword = await this.usersService.comparePassword(login.password, user.password);
